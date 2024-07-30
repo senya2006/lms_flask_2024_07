@@ -8,6 +8,7 @@ flask = "*"
 faker = "*"
 ipython = "*"
 requests = "*"
+pandas = "*"
 
 [dev-packages]
 
