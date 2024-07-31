@@ -8,8 +8,7 @@ flask = "*"
 faker = "*"
 ipython = "*"
 requests = "*"
-webargs = "*"
-httpx = "*"
+pandas = "*"
 
 [dev-packages]
 
