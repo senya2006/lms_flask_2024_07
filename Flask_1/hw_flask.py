@@ -2,40 +2,37 @@ from flask import Flask
 import random
 import string
 import csv
-import urllib.parse
+import os
 
 app = Flask(__name__)
 
 
-def generate_random_password():
-    # Generate a random password with the special requirements
-
-    length = random.randint(10, 20)
-    characters = string.ascii_letters + string.digits + string.punctuation
-    password = ''.join(random.choice(characters) for _ in range(length))
-    return password
-
-
-generated_password = generate_random_password()
-
-
 @app.route("/generate_password")
 def generate_password():
-    global generated_password
-    generated_password = generate_random_password()
-    encoded_password = urllib.parse.quote(generated_password)   # # URL Password Encoding
-    return f"Generated Password: {generated_password}. Use this password in the URL as /calculate_average/{encoded_password}"
+    while True:
+        length = random.randint(10, 20)
+        characters = string.ascii_letters + string.digits + string.punctuation
+        password = ''.join(random.choice(characters) for _ in range(length))
+
+        # Check if the password contains at least one digit, one uppercase letter, and one special character
+        if (any(c.isdigit() for c in password) and
+                any(c.isupper() for c in password) and
+                any(c in string.punctuation for c in password)):
+            break
+
+    return f"Generated Password: {password}"
 
 
-@app.route("/calculate_average/<password>")
-def calculate_average(password):
-    global generated_password
-    decoded_password = urllib.parse.unquote(password)   # Decoding password from URL
-    if decoded_password != generated_password:
-        return "Invalid password!"
-
+@app.route("/calculate_average")
+def calculate_average():
     # Calculate average height and weight from CSV
-    with open('Flask_1/students.csv', mode='r') as file:
+    base_dir = os.path.dirname(os.path.abspath(__file__))
+    csv_file_path = os.path.join(base_dir, 'students.csv')
+
+    if not os.path.exists(csv_file_path):
+        return f"CSV file not found! Expected at {csv_file_path}"
+
+    with open(csv_file_path, mode='r') as file:
         csv_reader = csv.reader(file)
         next(csv_reader)  # Skip header
         heights = []
