@@ -6,27 +6,13 @@ from http import HTTPStatus
 import httpx
 from flask import Flask, request, Response
 from webargs.flaskparser import use_kwargs
-from webargs import fields, validate
+from Flask_2.cw_configs import password_length_config
 
 app = Flask(__name__)
 
 
-@app.route("/admin")
-def hello_world():
-    # view
-    return "<p>Hello, World!!!!</p>"
-
-
 @app.route("/generate-password")
-@use_kwargs(
-    {
-        "length": fields.Int(
-            missing=10,
-            validate=[validate.Range(min=8, max=100, min_inclusive=True, max_inclusive=True)],
-        )
-    },
-    location="query"
-)
+@use_kwargs(password_length_config, location="query")
 def generate_password(length):
     # password_length = request.args.get("length", '10')
     # max_limit = request.args.get("max_limit", '100')
@@ -39,9 +25,10 @@ def generate_password(length):
     # if not 8 <= password_length <= 100:
     #     return "Error: length should be between 8 and 100!"
 
+    password_length = length
     return "".join(
         random.choices(
-            string.digits + string.ascii_letters + string.punctuation, k=length
+            string.digits + string.ascii_letters + string.punctuation, k=password_length
         )
     )
 
@@ -58,10 +45,15 @@ def get_astronauts():
     result: dict = result.json()
     statistics = {}
     for entry in result.get('people', {}):
+        # accumulating crafts count
         statistics[entry['craft']] = statistics.get(entry['craft'], 0) + 1
 
     pprint.pprint(result)
     return statistics
+
+
+if __name__ == "__main__":
+    app.run(debug=True)
 
 # kiss - keep it simple, stupid!
 
@@ -75,11 +67,6 @@ def get_astronauts():
 # Camel_case - classes
 # snake_case - all python code except classes
 # kebab-case - for urls
-
-
-app.run(port=5001,
-        # debug=True
-        )
 
 # http://127.0.0.1:5001/profile?a=1
 # http://127.0.0.1:5001/about/
