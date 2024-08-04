@@ -1,17 +1,54 @@
-from flask import Flask, jsonify, request, Response
+from flask import Flask, jsonify, Response
+from webargs import fields
+from webargs.flaskparser import use_kwargs
 from SQL_3.database_handler import execute_query
 from http import HTTPStatus
 
 app = Flask(__name__)
 
 
+@app.route('/sales')
+@use_kwargs({'country': fields.Str(load_default=None)}, location="query")
+def order_price(country):
+    if country:
+        query = """
+        SELECT
+            invoices.BillingCountry AS Country,
+            SUM(invoice_items.UnitPrice * invoice_items.Quantity) AS TotalSales
+        FROM
+            invoices
+        JOIN
+            invoice_items ON invoices.InvoiceId = invoice_items.InvoiceId
+        WHERE
+            invoices.BillingCountry = ?
+        GROUP BY
+            invoices.BillingCountry
+        """
+        data = execute_query(query, (country,))
+        if not data:
+            return Response(f"No sales data found for country: {country}", status=HTTPStatus.NOT_FOUND)
+    else:
+        query = """
+        SELECT
+            invoices.BillingCountry AS Country,
+            SUM(invoice_items.UnitPrice * invoice_items.Quantity) AS TotalSales
+        FROM
+            invoices
+        JOIN
+            invoice_items ON invoices.InvoiceId = invoice_items.InvoiceId
+        GROUP BY
+            invoices.BillingCountry
+        """
+        data = execute_query(query)
+        if not data:
+            return Response("No sales data found", status=HTTPStatus.NOT_FOUND)
+
+    return jsonify(data)
+
+
 @app.route('/track_info')
-def get_all_info_about_track():
-    track_id = request.args.get('track_id', None)
-
-    if not track_id:
-        return Response("track_id parameter is required", status=HTTPStatus.BAD_REQUEST)
-
+@use_kwargs({'track_id': fields.Int(required=True)}, location="query")
+def get_all_info_about_track(track_id):
     query = """
     SELECT 
         tracks.TrackId,
@@ -67,10 +104,12 @@ def get_all_info_about_track():
 
     # Query to calculate the time of all tracks of all albums in hours
     query_total_time = """
-        SELECT SUM(Milliseconds) / (1000.0 * 60 * 60) AS TotalHours
-        FROM tracks
-        """
+    SELECT SUM(Milliseconds) / (1000.0 * 60 * 60) AS TotalHours
+    FROM tracks
+    """
     total_time_data = execute_query(query_total_time)
+
+    # Query to calculate the time of all tracks of all albums in hours
     result["TotalTimeAllTracksInHours"] = total_time_data[0][0] if total_time_data else 0
 
     return jsonify(result)
