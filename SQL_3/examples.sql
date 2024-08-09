@@ -4,7 +4,7 @@ SELECT FirstName, LastName FROM customers;
 
 SELECT FirstName, LastName AS NAME FROM customers;
 
-SELECT FirstName || '_' || LastName AS FullName FROM customers;
+SELECT FirstName || '_' || LastName AS FullName FROM customers; -- між ім'ям та прізвищем буде "_" і назва колонки FullName
 
 SELECT Quantity * UnitPrice FROM invoice_items;
 
@@ -22,7 +22,7 @@ SELECT * FROM customers WHERE CustomerId BETWEEN 1 and 10; -- відрізок �
 
 SELECT * FROM customers ORDER BY FirstName; -- сортування по алфавіту, спадаючий
 
-SELECT * FROM customers ORDER BY FirstName DESC; -- сортування в зростаючим
+SELECT * FROM customers ORDER BY FirstName DESC; -- сортування по алфавіту, зростаючий
 
 SELECT * FROM customers ORDER BY CustomerId LIMIT 5 OFFSET 0; -- OFFSET відступає певну кількість рядків
 
@@ -31,7 +31,7 @@ SELECT * FROM customers ORDER BY CustomerId LIMIT 5 OFFSET 10; -- LIMIT яког
 SELECT COUNT(*), Country FROM customers GROUP BY Country; -- рахує скільки покупців з кожної країни
 
 SELECT COUNT(*), Country FROM customers GROUP BY Country HAVING Country = 'USA'; -- HAVING дає змогу фільтрувати
--- по от цих погрупованих данних, а WHERE фільтрує рядок
+-- по от цих погруповані данні, а WHERE фільтрує рядок
 
 SELECT COUNT(*) OVER (PARTITION BY Country), Country FROM customers; -- Просто витягнули данні не стиснули їх
 
@@ -68,7 +68,7 @@ SELECT artists.Name, albums.Title FROM albums JOIN artists ON albums.ArtistId = 
 -- візьме ті що спільні і з ліва
 
 -- right join
--- навпаки з left join
+-- візьме ті що спільні і з права
 
 -- full join
 -- візьме всі данні
