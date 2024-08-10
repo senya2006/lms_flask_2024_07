@@ -11,6 +11,7 @@ requests = "*"
 pandas = "*"
 
 [dev-packages]
+ruff = "*"
 
 [requires]
 python_version = "3.12"
