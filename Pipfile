@@ -9,6 +9,7 @@ faker = "*"
 ipython = "*"
 requests = "*"
 pandas = "*"
+jupyter = "*"
 
 [dev-packages]
 ruff = "*"
