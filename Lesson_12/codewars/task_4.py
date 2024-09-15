@@ -6,13 +6,8 @@ with the sides of given length and false in any other case.
 
 
 def is_triangle(a, b, c):
-    if a <= 0 or b <= 0 or c <= 0:
-        return False
-
-    if a + b > c and a + c > b and b + c > a:
-        return True
-    else:
-        return False
+    sides = sorted([a, b, c])
+    return sides[0] + sides[1] > sides[2]
 
 
 # Example

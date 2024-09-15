@@ -1,15 +1,5 @@
 def new_format(string):
-    result = []
-    count = 0
-
-    for char in reversed(string):
-        result.append(char)
-        count += 1
-        if count == 3 and char != string[0]:
-            result.append('.')
-            count = 0
-
-    return ''.join(reversed(result))
+    return f'{int(string):,}'.replace(',', '.')
 
 
 # Tests
