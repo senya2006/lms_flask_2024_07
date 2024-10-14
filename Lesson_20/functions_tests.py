@@ -57,7 +57,7 @@ class TestFormattedName(unittest.TestCase):
         self.assertEqual(result, "Taras Grygorovych Shevchenko")
 
     def test_formatted_name_with_lowercase(self):
-        result = formatted_name("Taras", "Shevchenko", "Grygorovych")
+        result = formatted_name("taras", "shevchenko", "grygorovych")
         self.assertEqual(result, "Taras Grygorovych Shevchenko")
 
 
