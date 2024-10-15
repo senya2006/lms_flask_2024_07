@@ -17,6 +17,8 @@ class Fibonacci:
 
 
 def formatted_name(first_name, last_name, middle_name=''):
+    if not first_name and not last_name:
+        return ''
     if len(middle_name) > 0:
         full_name = first_name + ' ' + middle_name + ' ' + last_name
     else:
@@ -59,6 +61,19 @@ class TestFormattedName(unittest.TestCase):
     def test_formatted_name_with_lowercase(self):
         result = formatted_name("taras", "shevchenko", "grygorovych")
         self.assertEqual(result, "Taras Grygorovych Shevchenko")
+
+    def test_formatted_name_empty_values(self):
+        # Testing empty values
+        result = formatted_name("", "")
+        self.assertEqual(result, "")
+
+
+def run_tests():
+    # Checking for a specific list of values
+    values = [1, 7, 4, 7, 4, 3, 2, 5, 1, 8, 1, 0, 6, 1, 7, 0, 7, 0, 4]
+    fibonacci = Fibonacci()
+    results = [fibonacci(n) for n in values]
+    print("Fibonacci values:", results)
 
 
 if __name__ == '__main__':
